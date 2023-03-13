@@ -19,15 +19,39 @@ def home():
 
 @app.route('/animal/<int:id>')
 def animal_by_id(id):
-    return ''
+    animal = Animal.query.filter(Animal.id == id).first()
+    return f'''
+    <ul>ID: {animal.id}</ul>
+    <ul>Name: {animal.name}</ul>
+    <ul>Species: {animal.species}</ul>
+    <ul>Zookeeper: {animal.zookeeper.name}</ul>
+    <ul>Enclosure: {animal.enclosure.environment}</ul>
+    '''
 
 @app.route('/zookeeper/<int:id>')
 def zookeeper_by_id(id):
-    return ''
+    zookeeper = Zookeeper.query.filter(Zookeeper.id == id).first()
+    response = f''
+    response += f'<ul>ID: {zookeeper.id}</ul>'
+    response += f'<ul>Name: {zookeeper.name}</ul>'
+    response += f'<ul>Birthday: {zookeeper.birthday}</ul>'
+
+    for animal in zookeeper.animals:
+        response += f'<ul>Animal: {animal.name}</ul>'
+
+    return make_response(response)
 
 @app.route('/enclosure/<int:id>')
 def enclosure_by_id(id):
-    return ''
+    enclosure = Enclosure.query.filter(Enclosure.id == id).first()
+    response = f''
+    response += f'<ul>ID: {enclosure.id}</ul>'
+    response += f'<ul>Environment: {enclosure.environment}</ul>'
+    response += f'<ul>Open to Visitors: {enclosure.open_to_visitors}</ul>'
+
+    for animal in enclosure.animals:
+        response += f'<ul>Animal: {animal.name}</ul>'
+    return make_response(response)
 
 
 if __name__ == '__main__':
